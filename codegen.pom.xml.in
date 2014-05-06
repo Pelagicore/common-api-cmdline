@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.genivi.commonapi</groupId>
+	<artifactId>codegen</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<tycho.version>0.20.0</tycho.version>
+		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
+	</properties>
+
+	<repositories>
+
+		<repository>
+			<id>kepler</id>
+			<url>${kepler-repo.url}</url>
+			<layout>p2</layout>
+		</repository>
+
+		<repository>
+			<id>org.franca</id>
+  			<url>file://@INSTALLED_FRANCA_SITE_PATH@</url>
+			<layout>p2</layout>
+		</repository>
+
+	</repositories>
+
+	<build>
+		<plugins>
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>properties-maven-plugin</artifactId> -->
+<!-- 				<version>1.0-alpha-2</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<phase>initialize</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>read-project-properties</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<files> -->
+<!-- 								<file>${basedir}/codegen.properties</file> -->
+<!-- 							</files> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<executionEnvironment>JavaSE-1.6</executionEnvironment>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+</project> 
