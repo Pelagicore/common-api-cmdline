@@ -58,8 +58,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/commonAPICodeGen DESTINATION bin
 	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
-configure_file(codegen.pom.xml.in codegen.pom.xml @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/codegen.pom.xml DESTINATION ${JAR_DESTINATION_PATH}
+configure_file(codegen.pom.xml.in gen/codegen.pom.xml @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gen/codegen.pom.xml DESTINATION ${JAR_DESTINATION_PATH}
 )
 
 # Install dependencies
