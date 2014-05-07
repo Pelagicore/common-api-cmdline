@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(SomeIP-Codegen)
+project(CommonAPI-Codegen)
 
 set(CMAKE_MODULES_DESTINATION_DIR lib/cmake)
 
