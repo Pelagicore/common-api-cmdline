@@ -96,13 +96,17 @@ public class StandaloneGen {
 
 	ArrayList<GeneratorInterface> m_generators = new ArrayList<GeneratorInterface>();
 
-    private FModel getModel(FModelElement fModelElement) {
-        if (fModelElement.eContainer() instanceof FModel)
-            return (FModel) fModelElement.eContainer();
-        return getModel((FModelElement)(fModelElement.eContainer()));
-    }
+	private FModel getModel(FModelElement fModelElement) {
+		if (fModelElement.eContainer() instanceof FModel)
+			return (FModel) fModelElement.eContainer();
+		return getModel((FModelElement) (fModelElement.eContainer()));
+	}
 
 	public int run(String[] args) throws Exception {
+
+		for (String arg : args) {
+			System.out.println("arg: " + arg);
+		}
 
 		Options options = getOptions();
 
@@ -144,7 +148,8 @@ public class StandaloneGen {
 		if (fModelExtender.getFDInterfaces().size() <= 0)
 			logger.error("No Interfaces were deployed, nothing to generate.");
 
-		FModel fModel = getModel(fModelExtender.getFDInterfaces().get(0).getTarget());
+		FModel fModel = getModel(fModelExtender.getFDInterfaces().get(0)
+				.getTarget());
 
 		List<FDInterface> fInterfaces = fModelExtender.getFDInterfaces();
 
@@ -298,12 +303,13 @@ public class StandaloneGen {
 						"Directory where the generated files will be stored")
 				.hasArg().isRequired().withValueSeparator(' ').create(OUTDIR);
 		options.addOption(optOutputDir);
-		
+
 		Option optGeneratorsPath = OptionBuilder
 				.withArgName("generators path")
 				.withDescription(
 						"Directory containing the JAR file for the various generators")
-				.hasArg().isRequired().withValueSeparator(' ').create(GENERATORS_PATH);
+				.hasArg().isRequired().withValueSeparator(' ')
+				.create(GENERATORS_PATH);
 		options.addOption(optGeneratorsPath);
 
 		return options;
