@@ -69,17 +69,17 @@ public class StandaloneGen {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
+	public static int go(String[] args) throws Exception {
 		injector = new FrancaIDLStandaloneSetup()
 				.createInjectorAndDoEMFRegistration();
 		new FDeployStandaloneSetup().createInjectorAndDoEMFRegistration();
 
 		int retval = injector.getInstance(StandaloneGen.class).run(args);
-		if (retval != 0)
-			System.exit(retval);
+		return retval;
 	}
 
-	void printHelp(Options options) {
+	static void printHelp(Options options) {
+		new Exception().printStackTrace();
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(HELPSTR, options);
 		formatter.printHelp(EXAMPLE_HELPSTR, options);
@@ -103,10 +103,6 @@ public class StandaloneGen {
 	}
 
 	public int run(String[] args) throws Exception {
-
-		for (String arg : args) {
-			System.out.println("arg: " + arg);
-		}
 
 		Options options = getOptions();
 
@@ -189,8 +185,7 @@ public class StandaloneGen {
 						byte[] existingFileContent = new byte[fis.available()];
 						fis.read(existingFileContent);
 						fis.close();
-						logger.info("length " + existingFileContent.length
-								+ " " + bytesToWrite.length);
+//						logger.info("length " + existingFileContent.length + " " + bytesToWrite.length);
 						if (Arrays.equals(bytesToWrite, existingFileContent)) {
 							logger.info("No change to file "
 									+ outputFile.getAbsolutePath());
@@ -274,7 +269,7 @@ public class StandaloneGen {
 	}
 
 	@SuppressWarnings("static-access")
-	private Options getOptions() {
+	static Options getOptions() {
 		// String[] set = LogFactory.getLog(getClass()).
 		final Options options = new Options();
 
@@ -315,7 +310,7 @@ public class StandaloneGen {
 		return options;
 	}
 
-	private boolean checkCommandLineValues(CommandLine line) {
+	static boolean checkCommandLineValues(CommandLine line) {
 		if (line.hasOption(FIDLFILE)) {
 			String fidlFile = line.getOptionValue(FIDLFILE);
 			File fidl = new File(fidlFile);

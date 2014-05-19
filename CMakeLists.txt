@@ -45,8 +45,6 @@ set(JAR_DESTINATION_PATH share/CommonAPICodeGen)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_JAR} DESTINATION ${JAR_DESTINATION_PATH})
 
-install(FILES CommonAPICodeGenConfig.cmake DESTINATION ${CMAKE_MODULES_DESTINATION_DIR}/CommonAPICodeGen)
-
 install(FILES codegen.pom.xml DESTINATION share/CommonAPICodeGen)
 install(FILES codegen.properties DESTINATION share/CommonAPICodeGen)
 
