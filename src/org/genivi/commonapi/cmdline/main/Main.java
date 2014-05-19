@@ -28,7 +28,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	public void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		Options options = StandaloneGen.getOptions();
 
 		// create the parser
