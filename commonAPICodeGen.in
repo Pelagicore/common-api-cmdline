@@ -1,5 +1,5 @@
 ROOT_FOLDER=`dirname $0`/..
 #echo "ROOT : $ROOT_FOLDER"
-CLASSPATH=${ROOT_FOLDER}/share/CommonAPICodeGen/org.genivi.commonapi.cmdlinelauncher.jar
+CLASSPATH=${ROOT_FOLDER}/share/CommonAPICodeGen/org.genivi.commonapi.cmdlinelauncher-1.0.0.jar
 MAINCLASS=org.genivi.commonapi.cmdline.main.Main
 java -classpath $ADDITIONAL_COMMONAPI_CODEGEN_CLASS_PATH:${CLASSPATH}:${ROOT_FOLDER}/include/franca_idls ${MAINCLASS} ${ROOT_FOLDER}/share/CommonAPICodeGen org.genivi.commonapi.cmdline.StandaloneGen "$@"
