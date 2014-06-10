@@ -1,11 +1,9 @@
-package org.genivi.commonapi.cmdline.main;
+package org.genivi.commonapi.cmdline;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,7 @@ import org.franca.deploymodel.dsl.FDeployPersistenceManager;
 import org.franca.deploymodel.dsl.FDeployStandaloneSetup;
 import org.franca.deploymodel.dsl.fDeploy.FDInterface;
 import org.franca.deploymodel.dsl.fDeploy.FDModel;
-import org.genivi.commonapi.cmdline.GeneratorInterface;
+import org.genivi.commonapi.cmdline.main.LaunchableWithArgs;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -41,7 +39,7 @@ import com.google.inject.Injector;
  * @author Klaus Birken (itemis)
  * @author Jacques Guillou (pelagicore)
  */
-public class StandaloneGen {
+public class StandaloneGen implements LaunchableWithArgs {
 
 	// prepare class for logging....
 	private static final Logger logger = Logger.getLogger(StandaloneGen.class);
@@ -53,7 +51,7 @@ public class StandaloneGen {
 	private static final String HELP = "h";
 	private static final String FIDLFILE = "f";
 	private static final String OUTDIR = "o";
-	private static final String GENERATORS_PATH = "g";
+	// private static final String GENERATORS_PATH = "g";
 
 	private static final String VERSIONSTR = "FrancaStandaloneGen "
 			+ TOOL_VERSION + " (Franca IDL version " + FIDL_VERSION + ").";
@@ -69,7 +67,14 @@ public class StandaloneGen {
 	/**
 	 * @param args
 	 */
-	public static int go(String[] args) throws Exception {
+	public int go(String[] args) throws Exception {
+
+		// Class c2 =
+		// classLoader.loadClass("org.genivi.commonapi.someip.generator.FInterfaceSomeIPProxyGenerator");
+		// logger.info(c2);
+		// classLoader.get
+		// getgetResourceAsStream(name)classpath:/someip/SomeIPSpecification.fdepl
+
 		injector = new FrancaIDLStandaloneSetup()
 				.createInjectorAndDoEMFRegistration();
 		new FDeployStandaloneSetup().createInjectorAndDoEMFRegistration();
@@ -79,7 +84,6 @@ public class StandaloneGen {
 	}
 
 	static void printHelp(Options options) {
-		new Exception().printStackTrace();
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(HELPSTR, options);
 		formatter.printHelp(EXAMPLE_HELPSTR, options);
@@ -102,12 +106,25 @@ public class StandaloneGen {
 		return getModel((FModelElement) (fModelElement.eContainer()));
 	}
 
-	public int run(String[] args) throws Exception {
+	private int run(String[] args) throws Exception {
+
+		ClassLoader classLoader = this.getClass().getClassLoader();
+
+		// org.eclipse.xtext.resource.ClassloaderClasspathUriResolver resolver =
+		// new org.eclipse.xtext.resource.ClassloaderClasspathUriResolver();
+		// org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI
+		// .createURI("classpath:/someip/SomeIPSpecification.fdepl");
+		// uri = resolver.resolve(this, uri);
+		// logger.info(uri);
+		//
+		// InputStream c3 = classLoader
+		// .getResourceAsStream("someip/SomeIPSpecification.fdepl");
+		// logger.info(c3);
 
 		Options options = getOptions();
 
 		// print version string
-		System.out.println(VERSIONSTR);
+		// System.out.println(VERSIONSTR);
 
 		// create the parser
 		CommandLineParser parser = new GnuParser();
@@ -132,134 +149,165 @@ public class StandaloneGen {
 		// call generator and save files
 		final String outputFolder = line.getOptionValue(OUTDIR);
 
-		FDModel fdeploymentModel = fdeploymentModelLoader.loadModel(
-				file.getName(), file.getAbsoluteFile().getParentFile()
-						.getAbsolutePath());
-		if (fdeploymentModel == null) {
-			logger.error("Couldn't load Franca deployment file '" + fidlFile
-					+ "'.");
-			return -1;
-		}
-		FDModelExtender fModelExtender = new FDModelExtender(fdeploymentModel);
-		if (fModelExtender.getFDInterfaces().size() <= 0)
-			logger.error("No Interfaces were deployed, nothing to generate.");
+		boolean loadSuccessful = true;
 
-		FModel fModel = getModel(fModelExtender.getFDInterfaces().get(0)
-				.getTarget());
+		try {
+			// FDModel fdeploymentModel_ = fdeploymentModelLoader.loadModel(
+			// file.getName(), file.getAbsoluteFile().getParentFile()
+			// .getAbsolutePath());
 
-		List<FDInterface> fInterfaces = fModelExtender.getFDInterfaces();
+			org.eclipse.emf.common.util.URI francaFileURI = org.eclipse.emf.common.util.URI
+					.createFileURI(file.getAbsolutePath());
 
-		IFileSystemAccess f = new IFileSystemAccess() {
+			FDModel fdeploymentModel = fdeploymentModelLoader.loadModel(
+					francaFileURI, francaFileURI);
 
-			@Override
-			public void generateFile(String arg0, String arg1, CharSequence arg2) {
-				// TODO
-				logger.error("Not implemented");
-				throw new RuntimeException();
-			}
+			if (fdeploymentModel == null) {
+				logger.error("Couldn't load Franca deployment file '"
+						+ fidlFile + "'.");
+				loadSuccessful = false;
+			} else {
+				FDModelExtender fModelExtender = new FDModelExtender(
+						fdeploymentModel);
+				if (fModelExtender.getFDInterfaces().size() <= 0)
+					logger.error("No Interfaces were deployed, nothing to generate.");
 
-			@Override
-			public void generateFile(String path, CharSequence content) {
-				File outputFile = new File(outputFolder + File.separator + path);
+				FModel fModel = getModel(fModelExtender.getFDInterfaces()
+						.get(0).getTarget());
 
-				// logger.info("Content of file : " + content);
+				List<FDInterface> fInterfaces = fModelExtender
+						.getFDInterfaces();
 
-				if (m_writtenFiles.contains(outputFile)) {
-					logger.info("Skipping already written file : "
-							+ outputFile.getAbsolutePath());
-					logger.info("Content of skipped file : " + content);
-					// logger.info("Content of already generated file : " +
-					// content);
-					return;
-				}
+				IFileSystemAccess f = new IFileSystemAccess() {
 
-				// m_writtenFiles.add(outputFile);
+					@Override
+					public void generateFile(String arg0, String arg1,
+							CharSequence arg2) {
+						// TODO
+						logger.error("Not implemented");
+						throw new RuntimeException();
+					}
 
-				try {
-					outputFile.getParentFile().mkdirs();
+					@Override
+					public void generateFile(String path, CharSequence content) {
+						File outputFile = new File(outputFolder
+								+ File.separator + path);
 
-					byte[] bytesToWrite = content.toString().getBytes();
+						// logger.info("Content of file : " + content);
 
-					try {
-						FileInputStream fis = new FileInputStream(outputFile);
-						byte[] existingFileContent = new byte[fis.available()];
-						fis.read(existingFileContent);
-						fis.close();
-//						logger.info("length " + existingFileContent.length + " " + bytesToWrite.length);
-						if (Arrays.equals(bytesToWrite, existingFileContent)) {
-							logger.info("No change to file "
+						if (m_writtenFiles.contains(outputFile)) {
+							logger.info("Skipping already written file : "
 									+ outputFile.getAbsolutePath());
+							logger.info("Content of skipped file : " + content);
+							// logger.info("Content of already generated file : "
+							// +
+							// content);
 							return;
 						}
 
-					} catch (Exception e) {
-						// e.printStackTrace();
+						// m_writtenFiles.add(outputFile);
+
+						try {
+							outputFile.getParentFile().mkdirs();
+
+							byte[] bytesToWrite = content.toString().getBytes();
+
+							try {
+								FileInputStream fis = new FileInputStream(
+										outputFile);
+								byte[] existingFileContent = new byte[fis
+										.available()];
+								fis.read(existingFileContent);
+								fis.close();
+								// logger.info("length " +
+								// existingFileContent.length + " " +
+								// bytesToWrite.length);
+								if (Arrays.equals(bytesToWrite,
+										existingFileContent)) {
+									logger.info("No change to file "
+											+ outputFile.getAbsolutePath());
+									return;
+								}
+
+							} catch (Exception e) {
+								// e.printStackTrace();
+							}
+
+							logger.info("Writing file "
+									+ outputFile.getAbsolutePath());
+
+							outputFile.createNewFile();
+							FileOutputStream os = new FileOutputStream(
+									outputFile);
+
+							os.write(bytesToWrite);
+							os.close();
+
+						} catch (IOException e) {
+							logger.error("Can not create file "
+									+ outputFile.getAbsolutePath());
+							e.printStackTrace();
+						}
+
 					}
 
-					logger.info("Writing file " + outputFile.getAbsolutePath());
+					@Override
+					public void deleteFile(String arg0) {
+						// TODO
+						logger.error("Not implemented");
+						throw new RuntimeException();
+					}
 
-					outputFile.createNewFile();
-					FileOutputStream os = new FileOutputStream(outputFile);
+				};
 
-					os.write(bytesToWrite);
-					os.close();
+				// String generatorsPath = line.getOptionValue(GENERATORS_PATH);
+				// if (generatorsPath.equals(null))
+				// generatorsPath = ".";
 
-				} catch (IOException e) {
-					logger.error("Can not create file "
-							+ outputFile.getAbsolutePath());
-					e.printStackTrace();
+				// File localFolder = new File(".");
+				/*
+				 * ArrayList<URL> urls = new ArrayList<URL>(); for (File jarFile
+				 * : new File(generatorsPath).listFiles()) { if
+				 * (jarFile.getName().endsWith(".jar")) {
+				 * urls.add(jarFile.toURI().toURL());
+				 * logger.trace("Found generator JAR : " + jarFile); } }
+				 * 
+				 * URL[] urlArray = new URL[urls.size()]; URLClassLoader
+				 * classLoader = new URLClassLoader( urls.toArray(urlArray),
+				 * this.getClass() .getClassLoader());
+				 */
+
+				for (String arg : line.getArgs()) {
+					try {
+
+						Class<GeneratorInterface> c = (Class<GeneratorInterface>) classLoader
+								.loadClass(getClassForID(arg));
+
+						m_generators.add(injector.getInstance(c));
+
+					} catch (Exception e) {
+						logger.error("Invalid generator type : " + arg);
+						e.printStackTrace();
+						return -1;
+					}
+
 				}
 
+				for (GeneratorInterface generator : m_generators) {
+					generator.generate(fModel, fInterfaces, f, null);
+				}
+
+				logger.info("FrancaStandaloneGen done.");
+
 			}
-
-			@Override
-			public void deleteFile(String arg0) {
-				// TODO
-				logger.error("Not implemented");
-				throw new RuntimeException();
-			}
-
-		};
-
-		String generatorsPath = line.getOptionValue(GENERATORS_PATH);
-		if (generatorsPath.equals(null))
-			generatorsPath = ".";
-		// File localFolder = new File(".");
-
-		ArrayList<URL> urls = new ArrayList<URL>();
-		for (File jarFile : new File(generatorsPath).listFiles()) {
-			if (jarFile.getName().endsWith(".jar")) {
-				urls.add(jarFile.toURI().toURL());
-				logger.trace("Found generator JAR : " + jarFile);
-			}
+		} catch (Exception e) {
+			logger.error("Exception occurred !", e);
+			e.printStackTrace();
+			loadSuccessful = false;
 		}
 
-		URL[] urlArray = new URL[urls.size()];
-		URLClassLoader classLoader = new URLClassLoader(urls.toArray(urlArray),
-				this.getClass().getClassLoader());
+		return loadSuccessful ? 0 : 1;
 
-		for (String arg : line.getArgs()) {
-			try {
-
-				Class<GeneratorInterface> c = (Class<GeneratorInterface>) classLoader
-						.loadClass(getClassForID(arg));
-
-				m_generators.add(injector.getInstance(c));
-
-			} catch (Exception e) {
-				logger.error("Invalid generator type : " + arg);
-				e.printStackTrace();
-				return -1;
-			}
-
-		}
-
-		for (GeneratorInterface generator : m_generators) {
-			generator.generate(fModel, fInterfaces, f, null);
-		}
-
-		logger.info("FrancaStandaloneGen done.");
-		return 0;
 	}
 
 	static String getClassForID(String arg) {
@@ -299,13 +347,13 @@ public class StandaloneGen {
 				.hasArg().isRequired().withValueSeparator(' ').create(OUTDIR);
 		options.addOption(optOutputDir);
 
-		Option optGeneratorsPath = OptionBuilder
-				.withArgName("generators path")
-				.withDescription(
-						"Directory containing the JAR file for the various generators")
-				.hasArg().isRequired().withValueSeparator(' ')
-				.create(GENERATORS_PATH);
-		options.addOption(optGeneratorsPath);
+		// Option optGeneratorsPath = OptionBuilder
+		// .withArgName("generators path")
+		// .withDescription(
+		// "Directory containing the JAR file for the various generators")
+		// .hasArg().isRequired().withValueSeparator(' ')
+		// .create(GENERATORS_PATH);
+		// options.addOption(optGeneratorsPath);
 
 		return options;
 	}
