@@ -25,7 +25,7 @@ add_custom_command(
 
 add_custom_command(
 	OUTPUT ${G_OUTPUT_JAR}
-	COMMAND mvn -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline/pom.xml install
+	COMMAND mvn ${MAVEN_OPTIONS} -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline/pom.xml install
 	DEPENDS ${FRANCA_PATH}/site.xml
 )
 
@@ -37,20 +37,20 @@ add_custom_command(
 
 add_custom_target(
 	launcher ALL
-	COMMAND mvn -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher/pom.xml install
+	COMMAND mvn ${MAVEN_OPTIONS} -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher/pom.xml install
 	DEPENDS ${FRANCA_PATH}/site.xml
 )
 
 add_custom_target(
 	cmdline ALL
-	COMMAND mvn -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline/pom.xml install
+	COMMAND mvn ${MAVEN_OPTIONS} -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline/pom.xml install
 	DEPENDS launcher
 )
 
 # Install POM defining Eclipse + Franca repositories
 add_custom_target(
 	installcodegen ALL
-	COMMAND mvn -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_BINARY_DIR}/gen/codegen.pom.xml install
+	COMMAND mvn ${MAVEN_OPTIONS} -Dfranca.update.site.location=${FRANCA_PATH} -f ${CMAKE_CURRENT_BINARY_DIR}/gen/codegen.pom.xml install
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/codegen.pom.xml launcher cmdline
 )
 
