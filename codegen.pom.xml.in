@@ -24,7 +24,7 @@
 
 		<repository>
 			<id>org.franca</id>
-  			<url>file://@INSTALLED_FRANCA_SITE_PATH@</url>
+  			<url>http://repo.pelagicore.net/downloads/franca/update_site/0.8.9.201308271211</url>
 			<layout>p2</layout>
 		</repository>
 
