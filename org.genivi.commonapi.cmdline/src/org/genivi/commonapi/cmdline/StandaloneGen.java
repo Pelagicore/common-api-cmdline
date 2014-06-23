@@ -172,8 +172,7 @@ public class StandaloneGen implements LaunchableWithArgs {
 				if (fModelExtender.getFDInterfaces().size() <= 0)
 					logger.error("No Interfaces were deployed, nothing to generate.");
 
-				FModel fModel = getModel(fModelExtender.getFDInterfaces()
-						.get(0).getTarget());
+//				FModel fModel = getModel(fModelExtender.getFDInterfaces().get(0).getTarget());
 
 				List<FDInterface> fInterfaces = fModelExtender
 						.getFDInterfaces();
@@ -294,7 +293,12 @@ public class StandaloneGen implements LaunchableWithArgs {
 				}
 
 				for (GeneratorInterface generator : m_generators) {
-					generator.generate(fModel, fInterfaces, f, null);
+					for (FDInterface interfac : fInterfaces) {
+						ArrayList<FDInterface> a = new ArrayList<FDInterface>();
+						a.add(interfac);
+						generator.generate(getModel(interfac.getTarget()), a, f, null);
+					}
+//					generator.generate(fModel, fInterfaces, f, null);
 				}
 
 				logger.info("FrancaStandaloneGen done.");
