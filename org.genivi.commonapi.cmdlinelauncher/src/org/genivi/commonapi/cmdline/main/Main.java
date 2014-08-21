@@ -4,15 +4,18 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
- * That class implements a main() method which gets 2 parameter: - The name of a
- * folder where JAR files are going to be found - The name of a main class which
- * is loaded using a classloader giving access to the classes located in the
- * JARs mentioned above
- * 
- * After loading that main class,
- * 
+ * That program take 2 parameters:
+ * - The name of a folder where some JAR files can be found.
+ * - The name of a main class to be loaded and executed
+ * The program loads the main class using a classloader which can load any class from the JAR files mentioned above,
+ * and activates it by calling its "go" method.
+ *
+ * You can use that program to get the same effect as when agregating many jars into one.
+ *
  * @author Jacques Guillou (pelagicore)
  */
 public class Main {
@@ -28,14 +31,28 @@ public class Main {
 
 		String mainClassName = args[1];
 
-		ArrayList<URL> urls = new ArrayList<URL>();
+		ArrayList<File> files = new ArrayList<File>();
 		for (File jarFile : new File(generatorsPath).listFiles()) {
 			if (jarFile.getName().endsWith(".jar")) {
-				urls.add(jarFile.toURI().toURL());
-//				System.out.println("Found generator JAR : " + jarFile);
+				files.add(jarFile);
 			}
 		}
 
+		// Sort the list to use the most recent JARs
+		Collections.sort(files, new Comparator<File>() {
+			@Override
+			public int compare(File o1, File o2) {
+				if(o1.lastModified() == o2.lastModified())
+					return 0;
+				return (o1.lastModified() < o2.lastModified()) ? 1 : -1; 
+			}
+		});
+
+		ArrayList<URL> urls = new ArrayList<URL>();
+		
+		for (File jarFile : files)
+				urls.add(jarFile.toURI().toURL());
+		
 		URL[] urlArray = new URL[urls.size()];
 		urls.toArray(urlArray);
 
@@ -69,28 +86,5 @@ public class Main {
 
 		System.exit(returnCode);
 	}
-
-	// public Main(URL[] urls, String[] args) {
-	//
-	// // ClassLoader thisClassLoader = this.getClass().getClassLoader();
-	// //
-	// // ClassLoader myClassLoader = new ClassLoader() {
-	// // public Class<?> findClass(String name) {
-	// // // System.out.println("Loading class " + name);
-	// // // if (name.equals(MAIN_CLASS_NAME)) return null;
-	// //
-	// // return null;
-	// // }
-	// //
-	// // public URL findResource(String name) {
-	// // System.out.println("Loading resource " + name);
-	// // return null;
-	// // }
-	// // };
-	// //
-	// // URLClassLoader classLoaderOld = new URLClassLoader(urls,
-	// this.getClass().getClassLoader());
-	//
-	// }
 
 }
