@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.franca.core.dsl.FrancaIDLStandaloneSetup;
@@ -51,6 +53,7 @@ public class StandaloneGen implements LaunchableWithArgs {
 	private static final String HELP = "h";
 	private static final String FIDLFILE = "f";
 	private static final String OUTDIR = "o";
+	private static final String LISTMODE = "l";
 	// private static final String GENERATORS_PATH = "g";
 
 	private static final String VERSIONSTR = "FrancaStandaloneGen "
@@ -151,6 +154,19 @@ public class StandaloneGen implements LaunchableWithArgs {
 
 		boolean loadSuccessful = true;
 
+		final boolean listOnlyMode = line.hasOption(LISTMODE);
+		// final boolean listOnlyMode = false;
+
+		// Make sure no one prints to stdout while we generate our list of files
+		final PrintStream outPrintStream = System.out;
+		System.setOut(new PrintStream(File.createTempFile("bla", "bla")));
+
+		if (listOnlyMode) {
+			logger.setLevel(Level.OFF);
+			Logger rootLogger = Logger.getLogger("main");
+			rootLogger.setLevel(Level.OFF);
+		}
+
 		try {
 			// FDModel fdeploymentModel_ = fdeploymentModelLoader.loadModel(
 			// file.getName(), file.getAbsoluteFile().getParentFile()
@@ -172,7 +188,8 @@ public class StandaloneGen implements LaunchableWithArgs {
 				if (fModelExtender.getFDInterfaces().size() <= 0)
 					logger.error("No Interfaces were deployed, nothing to generate.");
 
-//				FModel fModel = getModel(fModelExtender.getFDInterfaces().get(0).getTarget());
+				// FModel fModel =
+				// getModel(fModelExtender.getFDInterfaces().get(0).getTarget());
 
 				List<FDInterface> fInterfaces = fModelExtender
 						.getFDInterfaces();
@@ -194,60 +211,65 @@ public class StandaloneGen implements LaunchableWithArgs {
 
 						// logger.info("Content of file : " + content);
 
-						if (m_writtenFiles.contains(outputFile)) {
-							logger.info("Skipping already written file : "
-									+ outputFile.getAbsolutePath());
-							logger.info("Content of skipped file : " + content);
-							// logger.info("Content of already generated file : "
-							// +
-							// content);
-							return;
-						}
-
-						// m_writtenFiles.add(outputFile);
-
-						try {
-							outputFile.getParentFile().mkdirs();
-
-							byte[] bytesToWrite = content.toString().getBytes();
-
-							try {
-								FileInputStream fis = new FileInputStream(
-										outputFile);
-								byte[] existingFileContent = new byte[fis
-										.available()];
-								fis.read(existingFileContent);
-								fis.close();
-								// logger.info("length " +
-								// existingFileContent.length + " " +
-								// bytesToWrite.length);
-								if (Arrays.equals(bytesToWrite,
-										existingFileContent)) {
-									logger.info("No change to file "
-											+ outputFile.getAbsolutePath());
-									return;
-								}
-
-							} catch (Exception e) {
-								// e.printStackTrace();
+						if (listOnlyMode)
+							outPrintStream.print(outputFile.getAbsoluteFile().getPath() + ";");
+						else {
+							if (m_writtenFiles.contains(outputFile)) {
+								logger.info("Skipping already written file : "
+										+ outputFile.getAbsolutePath());
+								logger.info("Content of skipped file : "
+										+ content);
+								// logger.info("Content of already generated file : "
+								// +
+								// content);
+								return;
 							}
 
-							logger.info("Writing file "
-									+ outputFile.getAbsolutePath());
+							// m_writtenFiles.add(outputFile);
 
-							outputFile.createNewFile();
-							FileOutputStream os = new FileOutputStream(
-									outputFile);
+							try {
+								outputFile.getParentFile().mkdirs();
 
-							os.write(bytesToWrite);
-							os.close();
+								byte[] bytesToWrite = content.toString()
+										.getBytes();
 
-						} catch (IOException e) {
-							logger.error("Can not create file "
-									+ outputFile.getAbsolutePath());
-							e.printStackTrace();
+								try {
+									FileInputStream fis = new FileInputStream(
+											outputFile);
+									byte[] existingFileContent = new byte[fis
+											.available()];
+									fis.read(existingFileContent);
+									fis.close();
+									// logger.info("length " +
+									// existingFileContent.length + " " +
+									// bytesToWrite.length);
+									if (Arrays.equals(bytesToWrite,
+											existingFileContent)) {
+										logger.info("No change to file "
+												+ outputFile.getAbsolutePath());
+										return;
+									}
+
+								} catch (Exception e) {
+									// e.printStackTrace();
+								}
+
+								logger.info("Writing file "
+										+ outputFile.getAbsolutePath());
+
+								outputFile.createNewFile();
+								FileOutputStream os = new FileOutputStream(
+										outputFile);
+
+								os.write(bytesToWrite);
+								os.close();
+
+							} catch (IOException e) {
+								logger.error("Can not create file "
+										+ outputFile.getAbsolutePath());
+								e.printStackTrace();
+							}
 						}
-
 					}
 
 					@Override
@@ -296,9 +318,10 @@ public class StandaloneGen implements LaunchableWithArgs {
 					for (FDInterface interfac : fInterfaces) {
 						ArrayList<FDInterface> a = new ArrayList<FDInterface>();
 						a.add(interfac);
-						generator.generate(getModel(interfac.getTarget()), a, f, null);
+						generator.generate(getModel(interfac.getTarget()), a,
+								f, null);
 					}
-//					generator.generate(fModel, fInterfaces, f, null);
+					// generator.generate(fModel, fInterfaces, f, null);
 				}
 
 				logger.info("FrancaStandaloneGen done.");
@@ -350,6 +373,13 @@ public class StandaloneGen implements LaunchableWithArgs {
 						"Directory where the generated files will be stored")
 				.hasArg().isRequired().withValueSeparator(' ').create(OUTDIR);
 		options.addOption(optOutputDir);
+
+		Option optListMode = OptionBuilder
+				.withArgName("generated file list only")
+				.withDescription(
+						"Enable list only mode, which outputs a list of files that would be generated")
+				.create(LISTMODE);
+		options.addOption(optListMode);
 
 		// Option optGeneratorsPath = OptionBuilder
 		// .withArgName("generators path")

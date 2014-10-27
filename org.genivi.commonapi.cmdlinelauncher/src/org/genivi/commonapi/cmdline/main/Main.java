@@ -68,7 +68,7 @@ public class Main {
 					new ClassLoader() {
 					});
 
-			System.out.println("Loading main class : " + mainClassName);
+//			System.out.println("Loading main class : " + mainClassName);
 
 			Class<LaunchableWithArgs> c = (Class<LaunchableWithArgs>) classLoader
 					.loadClass(mainClassName);
