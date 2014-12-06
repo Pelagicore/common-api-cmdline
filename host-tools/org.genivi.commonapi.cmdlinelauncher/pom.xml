@@ -15,8 +15,12 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
+
+	    <directory>${buildPrefix}target</directory>
+
 		<plugins>
 		</plugins>
+
 	</build>
 
 </project>

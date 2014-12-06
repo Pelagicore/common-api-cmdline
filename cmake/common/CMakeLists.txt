@@ -1,0 +1,2 @@
+install(FILES CommonAPICodeGenConfig.cmake DESTINATION ${CMAKE_MODULES_DESTINATION_DIR}/CommonAPICodeGen)
+install(FILES CommonAPICodeGenCommonConfig.cmake DESTINATION ${CMAKE_MODULES_DESTINATION_DIR}/CommonAPICodeGenCommon)
