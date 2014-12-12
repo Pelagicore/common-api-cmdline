@@ -5,15 +5,15 @@ set(COMMONAPI_GENERATED_FILES_LOCATION FrancaGen)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(COMMON_API REQUIRED CommonAPI)
-add_definitions(${COMMON_API_CFLAGS})
+add_definitions(${COMMONAPI_CFLAGS_OTHER})
+include_directories(${COMMONAPI_INCLUDE_DIRS})
 link_directories(${COMMON_API_LIBRARY_DIRS})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(FRANCA_IDLS_LOCATION ${CMAKE_INSTALL_PREFIX}/include/franca_idls)
 set(SERVICE_HEADERS_INSTALLATION_DESTINATION include/CommonAPIServices)
 set(SERVICE_HEADERS_INSTALLED_LOCATION ${CMAKE_INSTALL_PREFIX}/${SERVICE_HEADERS_INSTALLATION_DESTINATION})
-
 
 macro(get_library_name variableName interface)
 	set(LIBRARY_NAME ${interface}_CommonAPI)
@@ -96,7 +96,7 @@ Name: ${interface} Common-API Service
 Description: ${interface} Common-API Service
 Version: 
 Requires: CommonAPI
-Libs: -Wl,--no-as-needed,-l${LIBRARY_NAME}_Backend,--as-needed -l${LIBRARY_NAME}_Backend @DEVELOPMENT_LIBRARY_PATH@ 
+Libs: -Wl,--no-as-needed,-l${LIBRARY_NAME}_Backend,--as-needed -l${LIBRARY_NAME}_Backend -L\${libdir} @DEVELOPMENT_LIBRARY_PATH@ 
 Cflags: @DEVELOPMENT_INCLUDE_PATH@ -I\${includedir}/CommonAPIServices
 ")
 

@@ -16,7 +16,7 @@
 
 	<build>
 
-	    <directory>${buildPrefix}target</directory>
+		<finalName>${project.artifactId}</finalName>
 
 		<plugins>
 		</plugins>
