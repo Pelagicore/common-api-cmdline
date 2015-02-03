@@ -28,6 +28,12 @@
 			<layout>p2</layout>
 		</repository>
 
+<!-- 		<repository> -->
+<!-- 			<id>org.genivi.commonapi</id> -->
+<!-- 			<url>file:///home/jguillou/apps/share/commonAPIRepo</url> -->
+<!-- 			<layout>p2</layout> -->
+<!-- 		</repository> -->
+
 	</repositories>
 
 	<build>

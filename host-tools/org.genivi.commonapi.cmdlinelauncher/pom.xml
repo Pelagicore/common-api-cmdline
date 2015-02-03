@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../codegen.pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 		<groupId>org.genivi.commonapi</groupId>
 		<artifactId>codegen</artifactId>
 		<version>1.0.0</version>

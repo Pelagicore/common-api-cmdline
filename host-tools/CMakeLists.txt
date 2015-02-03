@@ -8,11 +8,11 @@ install(FILES CommonAPICodeGenFrameworkConfig.cmake DESTINATION ${CMAKE_MODULES_
 
 include(CommonAPICodeGenFrameworkConfig.cmake)
 
-add_maven_package(launcher ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher/pom.xml "")
-add_maven_package(cmdline ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline/pom.xml launcher)
+add_maven_package(launcher ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher "")
+add_maven_package(cmdline ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline launcher)
 
 #Install POM defining Eclipse + Franca repositories
-add_maven_package(installcodegen ${CMAKE_CURRENT_SOURCE_DIR}/codegen.pom.xml "launcher;cmdline")
+add_maven_package(installcodegen ${CMAKE_CURRENT_SOURCE_DIR} "launcher;cmdline")
 
 configure_file(commonAPICodeGen.in commonAPICodeGen @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/commonAPICodeGen DESTINATION bin
