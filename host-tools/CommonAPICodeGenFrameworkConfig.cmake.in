@@ -1,3 +1,8 @@
+#FIND_PACKAGE(PkgConfig REQUIRED)
+
+#pkg_check_modules(COMMON REQUIRED CommonAPICodeGen)
+#add_definitions(${COMMONAPI_CFLAGS_OTHER})
+#include_directories(${COMMONAPI_INCLUDE_DIRS})
 
 set(LOCAL_MAVEN_REPOSITORY_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/MavenRepo)
 
@@ -11,18 +16,30 @@ endif()
 
 message("Maven repository from other packages located in : ${SOURCE_SHARED_MAVEN_REPOSITORIES_LOCATION}")
 
-set(MAVEN_OPTIONS "-Dmaven.repo.local=${LOCAL_MAVEN_REPOSITORY_LOCATION}")
+if(@ENABLE_MAVEN_REPOSITORY_EXPORT@)
+	set(MAVEN_OPTIONS "-Dmaven.repo.local=${LOCAL_MAVEN_REPOSITORY_LOCATION}")
+endif()
 
 set(COMMON_API_CODEGEN_JAR_DESTINATION_PATH share/CommonAPICodeGen)
 
 macro(import_maven_repository PACKAGE_NAME)
-    execute_process(
-    	COMMAND cp -r ${SOURCE_SHARED_MAVEN_REPOSITORIES_LOCATION}/${PACKAGE_NAME} ${LOCAL_MAVEN_REPOSITORY_LOCATION}
-    )
+	if(@ENABLE_MAVEN_REPOSITORY_EXPORT@)
+	    execute_process(
+	    	COMMAND cp -r ${SOURCE_SHARED_MAVEN_REPOSITORIES_LOCATION}/${PACKAGE_NAME} ${LOCAL_MAVEN_REPOSITORY_LOCATION}
+	    )
+	    message("Using non shared Maven repository")
+	else()
+	    message("Warning: Using shared Maven repository")
+	endif()
 endmacro()
 
 macro(export_maven_repository PACKAGE_NAME)
-    install(DIRECTORY ${LOCAL_MAVEN_REPOSITORY_LOCATION}/ DESTINATION ${MAVEN_REPOSITORY_INSTALLATION_LOCATION}/${PACKAGE_NAME})
+	if(@ENABLE_MAVEN_REPOSITORY_EXPORT@)
+	    install(DIRECTORY ${LOCAL_MAVEN_REPOSITORY_LOCATION}/ DESTINATION ${MAVEN_REPOSITORY_INSTALLATION_LOCATION}/${PACKAGE_NAME})
+	    message("Using non shared Maven repository")
+	else()
+	    message("Warning: Using shared Maven repository")
+	endif()
 endmacro()
 
 macro(add_maven_package NAME PACKAGE_PATH DEPENDENCIES)

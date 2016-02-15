@@ -197,11 +197,9 @@ public class StandaloneGen implements LaunchableWithArgs {
 				IFileSystemAccess f = new IFileSystemAccess() {
 
 					@Override
-					public void generateFile(String arg0, String arg1,
-							CharSequence arg2) {
-						// TODO
-						logger.error("Not implemented");
-						throw new RuntimeException();
+					public void generateFile(String path, String arg1,
+							CharSequence content) {
+						generateFile(path, content);
 					}
 
 					@Override

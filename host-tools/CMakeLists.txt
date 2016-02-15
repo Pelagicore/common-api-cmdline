@@ -4,9 +4,18 @@ project(common-api-cmdline-host-tools)
 
 set(CMAKE_MODULES_DESTINATION_DIR lib/cmake)
 
-install(FILES CommonAPICodeGenFrameworkConfig.cmake DESTINATION ${CMAKE_MODULES_DESTINATION_DIR}/CommonAPICodeGenFramework)
+option(USE_SHARED_MAVEN_REPOSITORY "Use shared Maven repository (incompatible with Yocto)" OFF)
 
-include(CommonAPICodeGenFrameworkConfig.cmake)
+if(USE_SHARED_MAVEN_REPOSITORY)
+	set(ENABLE_MAVEN_REPOSITORY_EXPORT 0)
+else()
+	set(ENABLE_MAVEN_REPOSITORY_EXPORT 1)
+endif()
+
+configure_file(CommonAPICodeGenFrameworkConfig.cmake.in CommonAPICodeGenFrameworkConfig.cmake @ONLY)
+
+include(${CMAKE_CURRENT_BINARY_DIR}/CommonAPICodeGenFrameworkConfig.cmake)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonAPICodeGenFrameworkConfig.cmake DESTINATION CommonAPICodeGenFramework)
 
 add_maven_package(launcher ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher "")
 add_maven_package(cmdline ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline launcher)

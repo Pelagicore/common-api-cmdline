@@ -9,7 +9,7 @@
 
 	<properties>
 		<tycho.version>0.20.0</tycho.version>
-		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
+		<eclipse-repo.url>http://download.eclipse.org/releases/luna</eclipse-repo.url>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -17,46 +17,21 @@
 	<repositories>
 
 		<repository>
-			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
+			<id>luna</id>
+			<url>${eclipse-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
 
 		<repository>
 			<id>org.franca</id>
-			<url>http://repo.pelagicore.net/downloads/franca/update_site/0.8.9.201308271211</url>
+			<url>http://franca.eclipselabs.org.codespot.com/git/update_site/releases/0.9.1/</url>
 			<layout>p2</layout>
 		</repository>
-
-<!-- 		<repository> -->
-<!-- 			<id>org.genivi.commonapi</id> -->
-<!-- 			<url>file:///home/jguillou/apps/share/commonAPIRepo</url> -->
-<!-- 			<layout>p2</layout> -->
-<!-- 		</repository> -->
 
 	</repositories>
 
 	<build>
 		<plugins>
-
-			<!-- <plugin> -->
-			<!-- <groupId>org.codehaus.mojo</groupId> -->
-			<!-- <artifactId>properties-maven-plugin</artifactId> -->
-			<!-- <version>1.0-alpha-2</version> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <phase>initialize</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>read-project-properties</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <files> -->
-			<!-- <file>${basedir}/codegen.properties</file> -->
-			<!-- </files> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
