@@ -15,7 +15,7 @@ endif()
 configure_file(CommonAPICodeGenFrameworkConfig.cmake.in CommonAPICodeGenFrameworkConfig.cmake @ONLY)
 
 include(${CMAKE_CURRENT_BINARY_DIR}/CommonAPICodeGenFrameworkConfig.cmake)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonAPICodeGenFrameworkConfig.cmake DESTINATION CommonAPICodeGenFramework)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonAPICodeGenFrameworkConfig.cmake DESTINATION ${CMAKE_MODULES_DESTINATION_DIR}/CommonAPICodeGenFramework)
 
 add_maven_package(launcher ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdlinelauncher "")
 add_maven_package(cmdline ${CMAKE_CURRENT_SOURCE_DIR}/org.genivi.commonapi.cmdline launcher)
