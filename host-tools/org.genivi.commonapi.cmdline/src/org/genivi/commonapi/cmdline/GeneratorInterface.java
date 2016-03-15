@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.franca.core.franca.FModel;
 import org.franca.deploymodel.dsl.fDeploy.FDInterface;
+import org.franca.deploymodel.dsl.fDeploy.FDTypes;
 
 /**
  * Interface to be implemented by generators
@@ -14,7 +15,7 @@ import org.franca.deploymodel.dsl.fDeploy.FDInterface;
  */
 public interface GeneratorInterface {
 
-	public void generate(FModel fModel, List<FDInterface> deployedInterfaces,
+	public void generate(FModel fModel, List<FDInterface> deployedInterfaces, List<FDTypes> types,
 			IFileSystemAccess fileSystemAccess, IResource res);
 
 }

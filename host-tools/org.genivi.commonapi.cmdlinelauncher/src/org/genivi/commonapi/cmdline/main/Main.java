@@ -32,9 +32,11 @@ public class Main {
 		String mainClassName = args[1];
 
 		ArrayList<File> files = new ArrayList<File>();
-		for (File jarFile : new File(generatorsPath).listFiles()) {
-			if (jarFile.getName().endsWith(".jar")) {
-				files.add(jarFile);
+		if (new File(generatorsPath).exists()) {
+			for (File jarFile : new File(generatorsPath).listFiles()) {
+				if (jarFile.getName().endsWith(".jar")) {
+					files.add(jarFile);
+				}
 			}
 		}
 

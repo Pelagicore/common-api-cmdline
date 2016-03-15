@@ -30,6 +30,7 @@ import org.franca.deploymodel.dsl.FDeployPersistenceManager;
 import org.franca.deploymodel.dsl.FDeployStandaloneSetup;
 import org.franca.deploymodel.dsl.fDeploy.FDInterface;
 import org.franca.deploymodel.dsl.fDeploy.FDModel;
+import org.franca.deploymodel.dsl.fDeploy.FDTypes;
 import org.genivi.commonapi.cmdline.main.LaunchableWithArgs;
 
 import com.google.inject.Inject;
@@ -194,6 +195,9 @@ public class StandaloneGen implements LaunchableWithArgs {
 				List<FDInterface> fInterfaces = fModelExtender
 						.getFDInterfaces();
 
+				List<FDTypes> fTypeCollections = fModelExtender
+						.getFDTypesList();
+
 				IFileSystemAccess f = new IFileSystemAccess() {
 
 					@Override
@@ -210,7 +214,8 @@ public class StandaloneGen implements LaunchableWithArgs {
 						// logger.info("Content of file : " + content);
 
 						if (listOnlyMode)
-							outPrintStream.print(outputFile.getAbsoluteFile().getPath() + ";");
+							outPrintStream.print(outputFile.getAbsoluteFile()
+									.getPath() + ";");
 						else {
 							if (m_writtenFiles.contains(outputFile)) {
 								logger.info("Skipping already written file : "
@@ -313,12 +318,23 @@ public class StandaloneGen implements LaunchableWithArgs {
 				}
 
 				for (GeneratorInterface generator : m_generators) {
+
+					for (FDTypes typeCollection : fTypeCollections) {
+						ArrayList<FDTypes> typeList = new ArrayList<FDTypes>();
+						typeList.add(typeCollection);
+						generator
+								.generate(getModel(typeCollection.getTarget()),
+										new ArrayList<FDInterface>(), typeList,
+										f, null);
+					}
+
 					for (FDInterface interfac : fInterfaces) {
 						ArrayList<FDInterface> a = new ArrayList<FDInterface>();
 						a.add(interfac);
 						generator.generate(getModel(interfac.getTarget()), a,
-								f, null);
+								new ArrayList<FDTypes>(), f, null);
 					}
+
 					// generator.generate(fModel, fInterfaces, f, null);
 				}
 
