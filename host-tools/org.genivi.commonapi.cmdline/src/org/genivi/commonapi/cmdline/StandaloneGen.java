@@ -56,6 +56,7 @@ public class StandaloneGen implements LaunchableWithArgs {
 	private static final String OUTDIR = "o";
 	private static final String LISTMODE = "l";
 	// private static final String GENERATORS_PATH = "g";
+	private static final String STUB_SKELETON = "sk";
 
 	private static final String VERSIONSTR = "FrancaStandaloneGen "
 			+ TOOL_VERSION + " (Franca IDL version " + FIDL_VERSION + ").";
@@ -72,7 +73,7 @@ public class StandaloneGen implements LaunchableWithArgs {
 	 * @param args
 	 */
 	public int go(String[] args) throws Exception {
-
+            
 		// Class c2 =
 		// classLoader.loadClass("org.genivi.commonapi.someip.generator.FInterfaceSomeIPProxyGenerator");
 		// logger.info(c2);
@@ -111,6 +112,7 @@ public class StandaloneGen implements LaunchableWithArgs {
 	}
 
 	private int run(String[] args) throws Exception {
+
 
 		ClassLoader classLoader = this.getClass().getClassLoader();
 
@@ -394,6 +396,12 @@ public class StandaloneGen implements LaunchableWithArgs {
 						"Enable list only mode, which outputs a list of files that would be generated")
 				.create(LISTMODE);
 		options.addOption(optListMode);
+		
+		Option optionStubSkeleton = OptionBuilder
+                                .withArgName("generate stub skeleton")
+                                .withDescription("Generate skeleton code")
+                                .create(STUB_SKELETON);
+                options.addOption(optionStubSkeleton);
 
 		// Option optGeneratorsPath = OptionBuilder
 		// .withArgName("generators path")

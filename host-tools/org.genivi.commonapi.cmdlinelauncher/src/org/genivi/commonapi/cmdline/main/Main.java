@@ -134,6 +134,7 @@ public class Main {
 		String argsWithoutPluginsPath[] = new String[args.length - 2];
 		System.arraycopy(args, 2, argsWithoutPluginsPath, 0,
 				argsWithoutPluginsPath.length);
+				
 
 		int returnCode = -1;
 
