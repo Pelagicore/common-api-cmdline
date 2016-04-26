@@ -38,7 +38,7 @@ find_package(PkgConfig)
 #                        For example, given a deployment file '/tmp/MyInterface-dbus.fdepl' the sring passed here
 #                        should be '/tmp/MyInterface'
 #
-# idlFile                A string with the full path to the IDL file, e.g. '/tmp/MyInterface.fidl'
+# idlFile                A string with the full path to the IDL file, e.g. '/tmp/MyInterface.fidl' TODO update to describe list
 #
 # interface              A string to identify the interface. TODO: this has a few side effects that needs to be documented
 #                        This string should be used by a client that calls 'use_commonapi_service()'
@@ -47,7 +47,7 @@ find_package(PkgConfig)
 #                        passed as a semicolon separated list in double quotes, e.g.: "${path_one};${path_two}"
 #                        If no include paths are needed, an empty string should be passed as argument.
 #
-macro(add_commonapi_service variableName deploymentFilePrefix idlFile interface fidl_include_paths)
+macro(add_commonapi_service variableName interface deploymentFilePrefix idlFiles fidl_include_paths)
 
     get_library_name(BASE___ ${interface})
 
@@ -69,12 +69,12 @@ macro(add_commonapi_service variableName deploymentFilePrefix idlFile interface 
 
     if(${BACKEND} MATCHES "someip")
         find_package(CommonAPISomeIPCodeGen REQUIRED)
-        install_commonapi_someip_backend(${BASE___} ${variableName} ${deploymentFile} ${idlFile} ${interface})
+        install_commonapi_someip_backend(${BASE___} ${variableName} ${deploymentFile} ${idlFiles} ${interface})
     else()
         find_package(CommonAPIDBusCodeGen REQUIRED)
-        install_commonapi_dbus_backend(${BASE___} ${variableName} ${deploymentFile} ${idlFile} ${interface} "${fidl_include_paths}")
+        install_commonapi_dbus_backend(${BASE___} ${variableName} ${deploymentFile} "${idlFiles}" ${interface} "${fidl_include_paths}")
     endif()
 
-    install_franca_idl(${interface} ${deploymentFile} ${deploymentFilePrefix}.fdepl ${idlFile})
+    install_franca_idl(${interface} ${deploymentFile} ${deploymentFilePrefix}.fdepl "${idlFiles}")
 
 endmacro()
