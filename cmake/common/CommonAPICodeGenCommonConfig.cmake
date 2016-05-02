@@ -43,14 +43,14 @@ macro(prepare_fidl_temporary_location deploymentFile idlFiles fidl_include_paths
         if(IS_ABSOLUTE ${include_path})
             set(FULL_INCLUDE_PATH ${include_path})
         # ... otherwise construct one based on the relative path
-        else(IS_ABSOLUTE)
+        else()
             set(FULL_INCLUDE_PATH ${CMAKE_INSTALL_PREFIX}/${FRANCA_IDLS_LOCATION}/${include_path})
             # COMMONAPI_INTEGRATION_SYSROOT should be set by e.g. a yocto recipe to point out the
             # location of the build
             if(DEFINED COMMONAPI_INTEGRATION_SYSROOT)
                 set(FULL_INCLUDE_PATH ${COMMONAPI_INTEGRATION_SYSROOT}/${FULL_INCLUDE_PATH})
             endif(DEFINED COMMONAPI_INTEGRATION_SYSROOT)
-        endif(IS_ABSOLUTE)
+        endif()
         file(GLOB FIDL_FILES_HERE ${FULL_INCLUDE_PATH}/*.fidl)
         set(FIDL_FILES "${FIDL_FILES};${FIDL_FILES_HERE}")
     endforeach(include_path)
