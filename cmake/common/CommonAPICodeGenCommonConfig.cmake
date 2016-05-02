@@ -178,7 +178,7 @@ macro(add_commonapi_pkgconfig interface)
 
 	get_library_name(LIBRARY_NAME ${interface})
 	set(PKGCONFIG_FILENAME ${LIBRARY_NAME}.pc)
-    file(WRITE ${PROJECT_BINARY_DIR}/${PKGCONFIG_FILENAME} "prefix=@CMAKE_INSTALL_PREFIX@
+    file(WRITE ${PROJECT_BINARY_DIR}/${PKGCONFIG_FILENAME} "prefix=${CMAKE_INSTALL_PREFIX}
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -187,8 +187,8 @@ Name: ${interface} Common-API Service
 Description: ${interface} Common-API Service
 Version: 
 Requires: CommonAPI
-Libs: -Wl,--no-as-needed,-l${LIBRARY_NAME}_Backend,--as-needed -l${LIBRARY_NAME}_Backend -L\${libdir} @DEVELOPMENT_LIBRARY_PATH@ 
-Cflags: @DEVELOPMENT_INCLUDE_PATH@ -I\${includedir}/CommonAPIServices
+Libs: -Wl,--no-as-needed,-l${LIBRARY_NAME}_Backend,--as-needed -l${LIBRARY_NAME}_Backend -L\${libdir} ${DEVELOPMENT_LIBRARY_PATH}
+Cflags: ${DEVELOPMENT_INCLUDE_PATH} -I\${includedir}/CommonAPIServices
 ")
 
     install(FILES ${PROJECT_BINARY_DIR}/${PKGCONFIG_FILENAME} DESTINATION lib/pkgconfig)
