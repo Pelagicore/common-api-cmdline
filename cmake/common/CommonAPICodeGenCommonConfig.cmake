@@ -33,7 +33,6 @@ endmacro()
 #
 # TODO:
 #       * Handle whole trees, e.g. when subdirectories contains the interface files
-#       * Handle non-absolute paths where a prefix needs to be used
 #
 macro(prepare_fidl_temporary_location deploymentFile idlFiles fidl_include_paths)
 
@@ -163,11 +162,12 @@ macro(use_commonapi_service_proxy variableName interface)
 endmacro(use_commonapi_service_proxy)
 
 
-# Warning : the pkg_check_modules macro seems to remove the libraries specified between "--no-as-needed" and "--as-needed" in pkg-config files, so we need to add the library twice. Once with "--no-as-needed" and once without
+# Warning: the pkg_check_modules macro seems to remove the libraries specified
+# between "--no-as-needed" and "--as-needed" in pkg-config files, so we need to add the library twice.
+# Once with "--no-as-needed" and once without!
+#
 # Generates and installs a pkg-config file
 macro(add_commonapi_pkgconfig interface)
-    # TODO: Fix the below so there are no cmake warnings
-
     if(INSTALL_PKGCONFIG_UNINSTALLED_FILE)
         set(DEVELOPMENT_INCLUDE_PATH " -I${CMAKE_CURRENT_BINARY_DIR}/${COMMONAPI_GENERATED_FILES_LOCATION} #")
         set(DEVELOPMENT_LIBRARY_PATH " -L${CMAKE_CURRENT_BINARY_DIR} #" )
@@ -176,8 +176,8 @@ macro(add_commonapi_pkgconfig interface)
         set(DEVELOPMENT_LIBRARY_PATH "")
     endif()
 
-	get_library_name(LIBRARY_NAME ${interface})
-	set(PKGCONFIG_FILENAME ${LIBRARY_NAME}.pc)
+    get_library_name(LIBRARY_NAME ${interface})
+    set(PKGCONFIG_FILENAME ${LIBRARY_NAME}.pc)
     file(WRITE ${PROJECT_BINARY_DIR}/${PKGCONFIG_FILENAME} "prefix=${CMAKE_INSTALL_PREFIX}
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
