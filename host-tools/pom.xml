@@ -24,7 +24,7 @@
 
 		<repository>
 			<id>org.franca</id>
-			<url>http://franca.eclipselabs.org.codespot.com/git/update_site/releases/0.9.1/</url>
+			<url>https://raw.githubusercontent.com/franca/franca/v0.9.2/update_site/releases/0.9.1</url>
 			<layout>p2</layout>
 		</repository>
 
