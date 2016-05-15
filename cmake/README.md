@@ -1,10 +1,9 @@
 # Introduction
-That package provides CMake integration for CommonAPI code generators.
-It enables you to get the CommonAPI generated code generated at compile-time instead of generating it "by hand", and storing the generated files in your version control 
-system. Proceeding that way ensures that the generated code is always in sync with both the CommonAPI version your package gets compiled with, and the Franca interface definition file.
+This package provides CMake integration for CommonAPI code generators.
+It enables CommonAPI generated code to be generated at compile-time instead of generating it manually and storing the generated files in your version control system. Using CMake ensures that the generated code is always in sync with both the CommonAPI version used for compilation and the Franca interface definition file.
 
 # Usage
-The package is meant to be very to use. Several macros are available, depending on which code generator you want to use :
+The package is meant to be easy to use. Several macros are available, depending on which code generator you want to use:
 
 * add_commonapi_dbus_service(VARIABLE_NAME DeploymentFile-dbus.fdepl Service.fidl mypackage/Service) : generates and installs a library containing a DBUS backend for the given service
 * add_commonapi_someip_service(VARIABLE_NAME DeploymentFile-someip.fdepl Service.fidl mypackage/Service) : generates and installs a library containing a SomeIP backend for the given service
