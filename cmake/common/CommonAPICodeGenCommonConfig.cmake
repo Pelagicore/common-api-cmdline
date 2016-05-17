@@ -1,4 +1,22 @@
 
+# Copyright (C) 2016 Pelagicore AB
+#
+# Permission to use, copy, modify, and/or distribute this software for
+# any purpose with or without fee is hereby granted, provided that the
+# above copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+# WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR
+# BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES
+# OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+# WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+# ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+# SOFTWARE.
+#
+# For further information see LICENSE.txt
+#
+
 set(COMMONAPI_CODEGEN_COMMAND_LINE commonAPICodeGen)
 set(COMMONAPI_GENERATED_FILES_LOCATION FrancaGen)
 
@@ -31,8 +49,13 @@ endmacro()
 # directly. When that happens, the intention is to keep the user API, e.g. "add_commonapi_service"
 # untouched and therefore this macro serves as a temporary fix to have the 'same' behaviour.
 #
+# NOTE: The variable 'COMMONAPI_INTEGRATION_SYSROOT' is used to resolve relative paths when in a
+#       Yocto build context. The variable should typically be set by the recipe for the component
+#       that uses this cmake API.
+#
 # TODO:
 #       * Handle whole trees, e.g. when subdirectories contains the interface files
+#       * Handle paths to specific files
 #
 macro(prepare_fidl_temporary_location deploymentFile idlFiles fidl_include_paths)
 
@@ -60,19 +83,14 @@ macro(prepare_fidl_temporary_location deploymentFile idlFiles fidl_include_paths
 
     # Copy all fidl files from include path(s) to temporary location
     file(COPY ${FIDL_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${TEMPORARY_FILES_LOCATION})
-#     message("### copied ${FIDL_FILES} to ${CMAKE_CURRENT_BINARY_DIR}/${COMMONAPI_GENERATED_FILES_LOCATION}")
 
     # Copy deployment file to the same tempoarary location as the included fidl files
     file(COPY ${deploymentFile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${TEMPORARY_FILES_LOCATION})
-#     message("### copied ${deploymentFile} to ${CMAKE_CURRENT_BINARY_DIR}/${COMMONAPI_GENERATED_FILES_LOCATION}")
 
     # Copy fidl file to the same tempoarary location as the included fidl files
     file(COPY ${idlFiles} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${TEMPORARY_FILES_LOCATION})
-#     message("### copied ${idlFile} to ${CMAKE_CURRENT_BINARY_DIR}/${COMMONAPI_GENERATED_FILES_LOCATION}")
 
-#     set(INCLUDED_FIDL_FILES_DIR ${COMMONAPI_GENERATED_FILES_LOCATION})
-
-    # Set a flag that a temporary location will be used
+    # Set a flag to indicate that a temporary location should be used
     set(USE_TEMPORARY_FIDL_LOCATION TRUE)
 endmacro()
 
@@ -121,7 +139,10 @@ macro(add_generated_files_command GENERATED_FILES deploymentFile codegenerators)
 endmacro()
 
 
-# TODO: We should not re-install code that has been generated based in included fidl files.
+# TODO:
+#       * We should not re-install code that has been generated based in included fidl files.
+#       * Are the install paths for fidl files sane? See if it's not better to install them in the interface-name
+#         directory and not one level above.
 #
 macro(install_franca_idl interfaceName deploymentFile deploymentFileDestinationName idlFiles)
     install(FILES ${idlFiles} DESTINATION ${FRANCA_IDLS_LOCATION}/${interfaceName}/.. )
@@ -133,7 +154,7 @@ endmacro()
 
 # Use a previously generated CommonAPI proxy/stub library
 #
-# NOTE: Deprecated! Use 'use_commonapi_service_stub' or 'use_commonapi_service_proxy'
+# NOTE: Do not use this macro directly, use 'use_commonapi_service_stub' or 'use_commonapi_service_proxy'
 macro(use_commonapi_service variableName interface)
 
     get_library_name(LIBRARY_NAME ${interface})
@@ -150,16 +171,6 @@ macro(use_commonapi_service variableName interface)
     message("CommonAPI libraries for ${interface} : ${${variableName}_LIBRARIES}")
 
 endmacro()
-
-
-macro(use_commonapi_service_stub variableName interface)
-    use_commonapi_service(${variableName} ${interface})
-endmacro(use_commonapi_service_stub)
-
-
-macro(use_commonapi_service_proxy variableName interface)
-    use_commonapi_service(${variableName} ${interface})
-endmacro(use_commonapi_service_proxy)
 
 
 # Warning: the pkg_check_modules macro seems to remove the libraries specified
