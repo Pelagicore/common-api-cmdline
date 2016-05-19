@@ -1,0 +1,14 @@
+
+package com.pelagicore
+
+typeCollection ExampleTypes2 {
+    version {
+        major 0
+        minor 1
+    }
+
+    enumeration Baz {
+        Value1
+        Value2
+    }
+}

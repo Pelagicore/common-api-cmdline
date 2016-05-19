@@ -1,0 +1,18 @@
+
+package com.pelagicore
+
+interface CircularDependencyExampleInterfaceB {
+    version {
+        major 0
+        minor 1
+    }
+
+    method Echo {
+        in {
+            String message
+        }
+        out {
+            String appendedMessage
+        }
+    }
+}

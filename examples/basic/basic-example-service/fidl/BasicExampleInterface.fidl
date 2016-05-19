@@ -1,0 +1,40 @@
+
+package com.pelagicore
+
+import com.pelagicore.ExampleTypes.* from "ExampleTypes.fidl"
+import com.pelagicore.ExampleTypes2.* from "ExampleTypes2.fidl"
+
+interface BasicExampleInterface {
+    version {
+        major 0
+        minor 1
+    }
+
+    method Echo {
+        in {
+            String message
+        }
+        out {
+            String appendedMessage
+        }
+    }
+
+    method EchoExampleType {
+        in {
+            String message
+        }
+        out {
+            FooBar Foo
+        }
+    }
+
+    method EchoExampleType2 {
+        in {
+            String message
+        }
+        out {
+            Baz Value1
+        }
+
+    }
+}

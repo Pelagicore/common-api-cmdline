@@ -1,0 +1,14 @@
+
+package com.pelagicore
+
+typeCollection ExampleTypes {
+    version {
+        major 0
+        minor 1
+    }
+
+    enumeration TheTypes {
+        Value1
+        Value2
+    }
+}

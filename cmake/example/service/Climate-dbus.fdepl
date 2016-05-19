@@ -1,7 +1,0 @@
-
-import "classpath:/deployment/DBusSpecification.fdepl"
-
-import "Climate.fidl"
-
-define DBusServiceSpecification for interface climate.Climate {
-}

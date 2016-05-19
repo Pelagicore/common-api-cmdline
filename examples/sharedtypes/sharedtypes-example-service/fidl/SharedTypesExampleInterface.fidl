@@ -1,0 +1,29 @@
+
+package com.pelagicore
+
+import com.pelagicore.ExampleTypes.* from "ExampleTypes.fidl"
+
+interface SharedTypesExampleInterface {
+    version {
+        major 0
+        minor 1
+    }
+
+    method Echo {
+        in {
+            String message
+        }
+        out {
+            String appendedMessage
+        }
+    }
+
+    method EchoExampleType {
+        in {
+            String message
+        }
+        out {
+            TheTypes Value1
+        }
+    }
+}
