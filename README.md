@@ -4,6 +4,15 @@ The package provides components to build command-line generators based on the Co
 
 # Usage
 
+The command line tool is called `commonAPICodeGen`. The basic usage is:
+
+```
+./commonAPICodeGen -f <filename>.fdepl -o <outputdir> dbus
+```
+
+In this example, the actual generator used is the dbus generator. Run the tool without arguments to get a more detailed usage guide.
+
+
 # Building
 
 This repository depends on a number of other repositories, the build instructions include them.
@@ -29,7 +38,7 @@ Then continue to build _common-api-cmdline_.
 cd common-api-cmdline
 mkdir b
 cd b
-cmake -DCMAKE_INSTALL_PREFIX=$INSTPATH ..
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTPATH ..
 make
 make install
 ```
