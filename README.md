@@ -1,3 +1,5 @@
+# Deprecated
+
 # Introduction
 
 The package provides components to build command-line generators based on the CommonAPI framework.
