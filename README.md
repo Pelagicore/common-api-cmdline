@@ -1,4 +1,4 @@
-<blink>Deprecated</blink>
+
 
 # Introduction
 
